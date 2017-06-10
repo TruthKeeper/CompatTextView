@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:scrollbarStyle="insideInset"
+    android:scrollbars="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.tk.compattextview.CompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="12dp"
+                android:clickable="true"
+                android:padding="12dp"
+                android:text="普通的圆角按钮"
+                app:ctv_bottomLeftRadius="6dp"
+                app:ctv_bottomRightRadius="6dp"
+                app:ctv_solidColor="@color/skyblue"
+                app:ctv_solidPressedColor="@color/blue"
+                app:ctv_textColor="@android:color/black"
+                app:ctv_textPressedColor="@color/orange"
+                app:ctv_topLeftRadius="6dp"
+                app:ctv_topRightRadius="6dp" />
+
+            <com.tk.compattextview.CompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:padding="12dp"
+                android:text="不可点击的按钮"
+                android:textColor="@android:color/white"
+                app:ctv_solidColor="@color/skyblue"
+                app:ctv_solidUnenabledColor="@android:color/darker_gray" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <com.tk.compattextview.CompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="12dp"
+                android:clickable="true"
+                android:padding="12dp"
+                android:text="带边框的按钮"
+                android:textColor="@android:color/white"
+                app:ctv_solidColor="@color/colorAccent"
+                app:ctv_solidPressedColor="@color/green"
+                app:ctv_strokeColor="@color/skyblue"
+                app:ctv_strokePressedColor="@color/blue"
+                app:ctv_strokeWidth="4dp" />
+
+            <com.tk.compattextview.CompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:padding="12dp"
+                android:text="部分圆角的按钮"
+                android:textColor="@android:color/white"
+                app:ctv_bottomRightRadius="8dp"
+                app:ctv_solidColor="@color/orange"
+                app:ctv_solidPressedColor="@color/red"
+                app:ctv_topLeftRadius="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+
+            <com.tk.compattextview.CompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="12dp"
+                android:clickable="true"
+                android:padding="20dp"
+                android:text="渐变的按钮"
+                app:ctv_fadeDuring="150"
+                app:ctv_gradientDirection="topLeftToBottomRight"
+                app:ctv_gradientDirectionPressed="topLeftToBottomRight"
+                app:ctv_gradientEndColor="@color/blue"
+                app:ctv_gradientEndPressedColor="@color/red"
+                app:ctv_gradientStartColor="@android:color/white"
+                app:ctv_gradientStartPressedColor="@color/skyblue"
+                app:ctv_textColor="@android:color/black"
+                app:ctv_textPressedColor="@android:color/white" />
+
+            <com.tk.compattextview.CompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:padding="20dp"
+                android:text="其他渐变按钮"
+                android:textColor="@android:color/white"
+                app:ctv_fadeDuring="150"
+                app:ctv_gradientDirection="leftToRight"
+                app:ctv_gradientDirectionPressed="bottomLeftToTopRight"
+                app:ctv_gradientEndColor="@color/blue"
+                app:ctv_gradientEndPressedColor="@android:color/white"
+                app:ctv_gradientStartColor="@color/green"
+                app:ctv_gradientStartPressedColor="@color/green"
+                app:ctv_strokeColor="@android:color/black"
+                app:ctv_strokePressedColor="@color/colorAccent"
+                app:ctv_strokeWidth="4dp"
+                app:ctv_topLeftRadius="4dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <com.tk.compattextview.CompatTextView
+                android:id="@+id/btn_select"
+                android:layout_width="128dp"
+                android:layout_height="64dp"
+                android:layout_marginRight="12dp"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="点击选择的按钮"
+                android:textColor="@android:color/white"
+                app:ctv_bottomLeftRadius="32dp"
+                app:ctv_bottomRightRadius="32dp"
+                app:ctv_solidColor="@color/skyblue"
+                app:ctv_solidPressedColor="@color/blue"
+                app:ctv_solidSelectedColor="@color/orange"
+                app:ctv_topLeftRadius="32dp"
+                app:ctv_topRightRadius="32dp" />
+
+            <com.tk.compattextview.CompatTextView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:clickable="true"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="圆"
+                android:textColor="@android:color/white"
+                app:ctv_bottomLeftRadius="32dp"
+                app:ctv_bottomRightRadius="32dp"
+                app:ctv_solidColor="@color/red"
+                app:ctv_solidPressedColor="@color/orange"
+                app:ctv_topLeftRadius="32dp"
+                app:ctv_topRightRadius="32dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <com.tk.compattextview.CompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:background="#aaaaaa"
+                android:gravity="center_vertical"
+                android:text="左侧普通图标"
+                android:textColor="@android:color/white"
+                app:ctv_tintDrawableLeft="@mipmap/ic_launcher" />
+
+            <com.tk.compattextview.CompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#aaaaaa"
+                android:drawablePadding="6dp"
+                android:gravity="center_vertical"
+                android:text="左侧是SVG图标\n默认是居中对齐"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                app:ctv_tintDrawableLeft="@drawable/vector_github" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <com.tk.compattextview.CompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:background="#aaaaaa"
+                android:gravity="center_vertical"
+                android:lineSpacingExtra="6dp"
+                android:text="支持Tint着色及大小\n自定义对齐方式：置顶"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"
+                app:ctv_drawableLeftAlign="top"
+                app:ctv_tintDrawableLeft="@drawable/vector_github"
+                app:ctv_tintDrawableLeftHeight="16dp"
+                app:ctv_tintDrawableLeftWidth="16dp"
+                app:ctv_tintLeft="@color/colorAccent" />
+
+            <com.tk.compattextview.CompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="#aaaaaa"
+                android:text="支持多方向对齐方式"
+                android:textColor="@android:color/white"
+                app:ctv_drawableBottomAlign="right"
+                app:ctv_drawableTopAlign="left"
+                app:ctv_tintBottom="@color/blue"
+                app:ctv_tintDrawableBottom="@drawable/vector_github"
+                app:ctv_tintDrawableTop="@drawable/vector_github"
+                app:ctv_tintDrawableTopHeight="40dp"
+                app:ctv_tintDrawableTopWidth="40dp"
+                app:ctv_tintTop="@color/green" />
+
+        </LinearLayout>
+
+        <com.tk.compattextview.CompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:clickable="true"
+            android:drawablePadding="6dp"
+            android:elevation="2dp"
+            android:gravity="center_vertical"
+            android:padding="12dp"
+            android:paddingLeft="10dp"
+            android:text="喜欢点个赞呗"
+            app:ctv_bottomLeftRadius="4dp"
+            app:ctv_bottomRightRadius="4dp"
+            app:ctv_fadeDuring="150"
+            app:ctv_solidColor="@color/skyblue"
+            app:ctv_solidPressedColor="@color/blue"
+            app:ctv_textColor="@android:color/white"
+            app:ctv_textPressedColor="@android:color/black"
+            app:ctv_tintDrawableLeft="@drawable/vector_github"
+            app:ctv_tintDrawableLeftHeight="28dp"
+            app:ctv_tintDrawableLeftWidth="28dp"
+            app:ctv_tintLeft="@color/colorAccent"
+            app:ctv_topLeftRadius="4dp"
+            app:ctv_topRightRadius="4dp" />
+    </LinearLayout>
+</ScrollView>

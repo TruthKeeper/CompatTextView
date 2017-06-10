@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CompatTextView">
+        <!--四个位置的圆角，传入对应宽度或者高度的一半就是圆形-->
+        <attr name="ctv_topLeftRadius" format="dimension" />
+        <attr name="ctv_topRightRadius" format="dimension" />
+        <attr name="ctv_bottomLeftRadius" format="dimension" />
+        <attr name="ctv_bottomRightRadius" format="dimension" />
+        <!--边框宽度-->
+        <attr name="ctv_strokeWidth" format="dimension" />
+        <!--边框线颜色-->
+        <attr name="ctv_strokeColor" format="color" />
+        <attr name="ctv_strokePressedColor" format="color" />
+        <attr name="ctv_strokeSelectedColor" format="color" />
+        <attr name="ctv_strokeUnenabledColor" format="color" />
+        <!--内容颜色-->
+        <attr name="ctv_solidColor" format="color" />
+        <attr name="ctv_solidPressedColor" format="color" />
+        <attr name="ctv_solidSelectedColor" format="color" />
+        <attr name="ctv_solidUnenabledColor" format="color" />
+        <!--文本颜色-->
+        <attr name="ctv_textColor" format="color" />
+        <attr name="ctv_textPressedColor" format="color" />
+        <attr name="ctv_textSelectedColor" format="color" />
+        <attr name="ctv_textUnenabledColor" format="color" />
+        <!--渐变颜色-->
+        <attr name="ctv_gradientStartColor" format="color" />
+        <attr name="ctv_gradientStartPressedColor" format="color" />
+        <attr name="ctv_gradientStartSelectedColor" format="color" />
+        <attr name="ctv_gradientStartUnenabledColor" format="color" />
+
+        <attr name="ctv_gradientEndColor" format="color" />
+        <attr name="ctv_gradientEndPressedColor" format="color" />
+        <attr name="ctv_gradientEndSelectedColor" format="color" />
+        <attr name="ctv_gradientEndUnenabledColor" format="color" />
+        <!--渐变方向-->
+        <attr name="ctv_gradientDirection" format="enum">
+            <enum name="topToBottom" value="0" />
+            <enum name="leftToRight" value="1" />
+            <enum name="topLeftToBottomRight" value="2" />
+            <enum name="bottomLeftToTopRight" value="3" />
+        </attr>
+        <attr name="ctv_gradientDirectionUnenabled" format="enum">
+            <enum name="topToBottom" value="0" />
+            <enum name="leftToRight" value="1" />
+            <enum name="topLeftToBottomRight" value="2" />
+            <enum name="bottomLeftToTopRight" value="3" />
+        </attr>
+        <attr name="ctv_gradientDirectionPressed" format="enum">
+            <enum name="topToBottom" value="0" />
+            <enum name="leftToRight" value="1" />
+            <enum name="topLeftToBottomRight" value="2" />
+            <enum name="bottomLeftToTopRight" value="3" />
+        </attr>
+        <attr name="ctv_gradientDirectionSelected" format="enum">
+            <enum name="topToBottom" value="0" />
+            <enum name="leftToRight" value="1" />
+            <enum name="topLeftToBottomRight" value="2" />
+            <enum name="bottomLeftToTopRight" value="3" />
+        </attr>
+        <!--Tint着色支持与drawable细腻配置-->
+        <attr name="ctv_tintLeft" format="color" />
+        <attr name="ctv_tintDrawableLeft" format="reference" />
+        <attr name="ctv_tintDrawableLeftWidth" format="dimension" />
+        <attr name="ctv_tintDrawableLeftHeight" format="dimension" />
+
+        <attr name="ctv_tintRight" format="color" />
+        <attr name="ctv_tintDrawableRight" format="reference" />
+        <attr name="ctv_tintDrawableRightWidth" format="dimension" />
+        <attr name="ctv_tintDrawableRightHeight" format="dimension" />
+
+        <attr name="ctv_tintTop" format="color" />
+        <attr name="ctv_tintDrawableTop" format="reference" />
+        <attr name="ctv_tintDrawableTopWidth" format="dimension" />
+        <attr name="ctv_tintDrawableTopHeight" format="dimension" />
+
+        <attr name="ctv_tintBottom" format="color" />
+        <attr name="ctv_tintDrawableBottom" format="reference" />
+        <attr name="ctv_tintDrawableBottomWidth" format="dimension" />
+        <attr name="ctv_tintDrawableBottomHeight" format="dimension" />
+        <!--drawable对齐方式-->
+        <attr name="ctv_drawableLeftAlign" format="enum">
+            <enum name="top" value="0" />
+            <enum name="center" value="1" />
+            <enum name="bottom" value="2" />
+        </attr>
+        <attr name="ctv_drawableRightAlign" format="enum">
+            <enum name="top" value="0" />
+            <enum name="center" value="1" />
+            <enum name="bottom" value="2" />
+        </attr>
+        <attr name="ctv_drawableTopAlign" format="enum">
+            <enum name="left" value="0" />
+            <enum name="center" value="1" />
+            <enum name="right" value="2" />
+        </attr>
+        <attr name="ctv_drawableBottomAlign" format="enum">
+            <enum name="left" value="0" />
+            <enum name="center" value="1" />
+            <enum name="right" value="2" />
+        </attr>
+        <!--切换的渐变，毫秒，默认0，无效果-->
+        <attr name="ctv_fadeDuring" format="integer" />
+    </declare-styleable>
+</resources>
