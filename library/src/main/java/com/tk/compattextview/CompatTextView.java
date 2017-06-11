@@ -89,7 +89,12 @@ public class CompatTextView extends AppCompatTextView {
         mFadeDuring = array.getInt(R.styleable.CompatTextView_ctv_fadeDuring, 0);
         array.recycle();
 
-        setCompoundDrawables(mTintDrawable[0], mTintDrawable[1], mTintDrawable[2], mTintDrawable[3]);
+        Drawable[] drawables = getCompoundDrawables();
+        setCompoundDrawables(null == mTintDrawable[0] ? drawables[0] : mTintDrawable[0],
+                null == mTintDrawable[1] ? drawables[1] : mTintDrawable[1],
+                null == mTintDrawable[2] ? drawables[2] : mTintDrawable[2],
+                null == mTintDrawable[3] ? drawables[3] : mTintDrawable[3]);
+
         Drawable drawable = processDrawable();
         if (null != drawable) {
             setBackgroundDrawable(drawable);
@@ -223,73 +228,84 @@ public class CompatTextView extends AppCompatTextView {
     @Override
     public void setCompoundDrawables(@Nullable final Drawable left, @Nullable final Drawable top,
                                      @Nullable final Drawable right, @Nullable final Drawable bottom) {
+        //由于测量的值会有变动，所以先触发一次重绘
+        super.setCompoundDrawables(left, top, right, bottom);
         post(new Runnable() {
             @Override
             public void run() {
-                //drawable size must be smaller than total space
-                if (null != left && left.getBounds().height() < getLineCount() * getLineHeight()) {
-                    int drawableTop = 0;
-                    switch (mDrawableAligh[0]) {
-                        case 0:
-                            drawableTop = getLineHeight() - getLineCount() * getLineHeight() >> 1;
-                            break;
-                        case 2:
-                            drawableTop = -(getLineHeight() - getLineCount() * getLineHeight()) >> 1;
-                            break;
-                        default:
-                            break;
-
-                    }
-                    left.getBounds().offset(0, drawableTop);
-                }
-                if (null != top && top.getBounds().width() < getMeasuredWidth()) {
-                    int drawableLeft = 0;
-                    switch (mDrawableAligh[1]) {
-                        case 0:
-                            drawableLeft = top.getBounds().width() - getMeasuredWidth() >> 1;
-                            break;
-                        case 2:
-                            drawableLeft = -(top.getBounds().width() - getMeasuredWidth()) >> 1;
-                            break;
-                        default:
-                            break;
-
-                    }
-                    top.getBounds().offset(drawableLeft, 0);
-                }
-                if (null != right && right.getBounds().height() < getLineCount() * getLineHeight()) {
-                    int drawableTop = 0;
-                    switch (mDrawableAligh[2]) {
-                        case 0:
-                            drawableTop = getLineHeight() - getLineCount() * getLineHeight() >> 1;
-                            break;
-                        case 2:
-                            drawableTop = -(getLineHeight() - getLineCount() * getLineHeight()) >> 1;
-                            break;
-                        default:
-                            break;
-
-                    }
-                    right.getBounds().offset(0, drawableTop);
-                }
-                if (null != bottom && bottom.getBounds().width() < getMeasuredWidth()) {
-                    int drawableLeft = 0;
-                    switch (mDrawableAligh[3]) {
-                        case 0:
-                            drawableLeft = bottom.getBounds().width() - getMeasuredWidth() >> 1;
-                            break;
-                        case 2:
-                            drawableLeft = -(bottom.getBounds().width() - getMeasuredWidth()) >> 1;
-                            break;
-                        default:
-                            break;
-
-                    }
-                    bottom.getBounds().offset(drawableLeft, 0);
-                }
-                CompatTextView.super.setCompoundDrawables(left, top, right, bottom);
+                setInnerDrawable(left, top, right, bottom);
             }
         });
+    }
+
+    private void setInnerDrawable(final Drawable left, final Drawable top,
+                                  final Drawable right, final Drawable bottom) {
+        //drawable size must be smaller than total space
+        if (null != left && left.getBounds().height() < getLineCount() * getLineHeight()) {
+            int drawableTop = 0;
+            switch (mDrawableAligh[0]) {
+                case 0:
+                    drawableTop = getLineHeight() - getLineCount() * getLineHeight() >> 1;
+                    break;
+                case 2:
+                    drawableTop = -(getLineHeight() - getLineCount() * getLineHeight()) >> 1;
+                    break;
+                default:
+                    break;
+
+            }
+            left.getBounds().bottom = left.getBounds().height() + drawableTop;
+            left.getBounds().top = drawableTop;
+        }
+        if (null != top && top.getBounds().width() < getMeasuredWidth()) {
+            int drawableLeft = 0;
+            switch (mDrawableAligh[1]) {
+                case 0:
+                    drawableLeft = top.getBounds().width() - getMeasuredWidth() >> 1;
+                    break;
+                case 2:
+                    drawableLeft = -(top.getBounds().width() - getMeasuredWidth()) >> 1;
+                    break;
+                default:
+                    break;
+
+            }
+            top.getBounds().right = top.getBounds().width() + drawableLeft;
+            top.getBounds().left = drawableLeft;
+        }
+        if (null != right && right.getBounds().height() < getLineCount() * getLineHeight()) {
+            int drawableTop = 0;
+            switch (mDrawableAligh[2]) {
+                case 0:
+                    drawableTop = getLineHeight() - getLineCount() * getLineHeight() >> 1;
+                    break;
+                case 2:
+                    drawableTop = -(getLineHeight() - getLineCount() * getLineHeight()) >> 1;
+                    break;
+                default:
+                    break;
+
+            }
+            right.getBounds().bottom = right.getBounds().height() + drawableTop;
+            right.getBounds().top = drawableTop;
+        }
+        if (null != bottom && bottom.getBounds().width() < getMeasuredWidth()) {
+            int drawableLeft = 0;
+            switch (mDrawableAligh[3]) {
+                case 0:
+                    drawableLeft = bottom.getBounds().width() - getMeasuredWidth() >> 1;
+                    break;
+                case 2:
+                    drawableLeft = -(bottom.getBounds().width() - getMeasuredWidth()) >> 1;
+                    break;
+                default:
+                    break;
+
+            }
+            bottom.getBounds().right = bottom.getBounds().width() + drawableLeft;
+            bottom.getBounds().left = drawableLeft;
+        }
+        super.setCompoundDrawables(left, top, right, bottom);
     }
 
     /**
