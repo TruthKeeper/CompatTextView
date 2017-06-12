@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="12dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -148,6 +148,7 @@
             <com.tk.compattextview.CompatTextView
                 android:layout_width="64dp"
                 android:layout_height="64dp"
+                android:layout_marginRight="8dp"
                 android:clickable="true"
                 android:gravity="center"
                 android:padding="12dp"
@@ -157,6 +158,23 @@
                 app:ctv_bottomRightRadius="32dp"
                 app:ctv_solidColor="@color/red"
                 app:ctv_solidPressedColor="@color/orange"
+                app:ctv_topLeftRadius="32dp"
+                app:ctv_topRightRadius="32dp" />
+
+            <com.tk.compattextview.CompatTextView
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:clickable="true"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="圆环"
+                android:textColor="@android:color/white"
+                app:ctv_bottomLeftRadius="32dp"
+                app:ctv_bottomRightRadius="32dp"
+                app:ctv_solidColor="@color/green"
+                app:ctv_solidPressedColor="@color/blue"
+                app:ctv_strokeColor="@color/red"
+                app:ctv_strokeWidth="4dp"
                 app:ctv_topLeftRadius="32dp"
                 app:ctv_topRightRadius="32dp" />
         </LinearLayout>
@@ -237,14 +255,13 @@
             android:layout_marginTop="12dp"
             android:clickable="true"
             android:drawablePadding="6dp"
-            android:elevation="2dp"
             android:gravity="center_vertical"
             android:padding="12dp"
             android:paddingLeft="10dp"
             android:text="喜欢点个赞呗"
             app:ctv_bottomLeftRadius="4dp"
             app:ctv_bottomRightRadius="4dp"
-            app:ctv_fadeDuring="150"
+            app:ctv_fadeDuring="200"
             app:ctv_solidColor="@color/skyblue"
             app:ctv_solidPressedColor="@color/blue"
             app:ctv_textColor="@android:color/white"

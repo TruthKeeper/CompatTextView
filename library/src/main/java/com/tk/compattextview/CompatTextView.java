@@ -18,8 +18,11 @@ import android.util.AttributeSet;
  * <pre>
  *     author : TK
  *     time   : 2017/06/07
- *     desc   : 减少shape、selector的xml维护成本；
- *              扩展drawableLeft大小、对齐方式、Tint着色、SVG支持，优化布局层次；
+ *     desc   : 支持shape的solid、stroke、gradient、radius的配置；
+ *              支持enabled、pressed、selected、unenabled共计4种状态的配置；
+ *              不再需要写大量的shape、selector文件配置；
+ *              支持上下左右的drawable大小配置，SVG支持、Tint着色支持；
+ *              支持上下左右的drawable的对齐方式配置；
  * </pre>
  */
 public class CompatTextView extends AppCompatTextView {
@@ -122,9 +125,9 @@ public class CompatTextView extends AppCompatTextView {
     private void initStroke(TintTypedArray array) {
         mStrokeWidth = array.getDimensionPixelOffset(R.styleable.CompatTextView_ctv_strokeWidth, 0);
         mStrokeColor[0] = array.getColor(R.styleable.CompatTextView_ctv_strokeColor, Color.GRAY);
-        mStrokeColor[1] = array.getColor(R.styleable.CompatTextView_ctv_strokePressedColor, Color.GRAY);
-        mStrokeColor[2] = array.getColor(R.styleable.CompatTextView_ctv_strokeSelectedColor, Color.GRAY);
-        mStrokeColor[3] = array.getColor(R.styleable.CompatTextView_ctv_strokeUnenabledColor, Color.GRAY);
+        mStrokeColor[1] = array.getColor(R.styleable.CompatTextView_ctv_strokePressedColor, mStrokeColor[0]);
+        mStrokeColor[2] = array.getColor(R.styleable.CompatTextView_ctv_strokeSelectedColor, mStrokeColor[0]);
+        mStrokeColor[3] = array.getColor(R.styleable.CompatTextView_ctv_strokeUnenabledColor, mStrokeColor[0]);
     }
 
     /**
@@ -228,11 +231,11 @@ public class CompatTextView extends AppCompatTextView {
     @Override
     public void setCompoundDrawables(@Nullable final Drawable left, @Nullable final Drawable top,
                                      @Nullable final Drawable right, @Nullable final Drawable bottom) {
-        //由于测量的值会有变动，所以先触发一次重绘
         super.setCompoundDrawables(left, top, right, bottom);
         post(new Runnable() {
             @Override
             public void run() {
+                //由于对其方式需要测量结果
                 setInnerDrawable(left, top, right, bottom);
             }
         });
@@ -305,7 +308,7 @@ public class CompatTextView extends AppCompatTextView {
             bottom.getBounds().right = bottom.getBounds().width() + drawableLeft;
             bottom.getBounds().left = drawableLeft;
         }
-        super.setCompoundDrawables(left, top, right, bottom);
+//        super.setCompoundDrawables(left, top, right, bottom);
     }
 
     /**
