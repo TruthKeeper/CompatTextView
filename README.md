@@ -128,7 +128,7 @@ CompatTextView继承自AppCompatTextView，目前支持了以下功能：
 
 ```
 dependencies {
-    compile 'com.tk.compattextview:library:1.0'
+    compile 'com.tk.compattextview:library:1.1'
 }
 ```
 
