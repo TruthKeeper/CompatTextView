@@ -28,7 +28,7 @@ import android.util.AttributeSet;
 public class CompatTextView extends AppCompatTextView {
     public static final int[][] STATES = new int[][]{{android.R.attr.state_selected},
             {android.R.attr.state_pressed},
-            {-android.R.attr.enabled},
+            {-android.R.attr.state_enabled},
             {}};
     /**
      * topLeft , topRight , bottomRight , bottomLeft
