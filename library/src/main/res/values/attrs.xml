@@ -12,27 +12,27 @@
         <attr name="ctv_strokeColor" format="color" />
         <attr name="ctv_strokePressedColor" format="color" />
         <attr name="ctv_strokeSelectedColor" format="color" />
-        <attr name="ctv_strokeUnenabledColor" format="color" />
+        <attr name="ctv_strokeDisabledColor" format="color" />
         <!--内容颜色-->
         <attr name="ctv_solidColor" format="color" />
         <attr name="ctv_solidPressedColor" format="color" />
         <attr name="ctv_solidSelectedColor" format="color" />
-        <attr name="ctv_solidUnenabledColor" format="color" />
+        <attr name="ctv_solidDisabledColor" format="color" />
         <!--文本颜色-->
         <attr name="ctv_textColor" format="color" />
         <attr name="ctv_textPressedColor" format="color" />
         <attr name="ctv_textSelectedColor" format="color" />
-        <attr name="ctv_textUnenabledColor" format="color" />
+        <attr name="ctv_textDisabledColor" format="color" />
         <!--渐变颜色-->
         <attr name="ctv_gradientStartColor" format="color" />
         <attr name="ctv_gradientStartPressedColor" format="color" />
         <attr name="ctv_gradientStartSelectedColor" format="color" />
-        <attr name="ctv_gradientStartUnenabledColor" format="color" />
+        <attr name="ctv_gradientStartDisabledColor" format="color" />
 
         <attr name="ctv_gradientEndColor" format="color" />
         <attr name="ctv_gradientEndPressedColor" format="color" />
         <attr name="ctv_gradientEndSelectedColor" format="color" />
-        <attr name="ctv_gradientEndUnenabledColor" format="color" />
+        <attr name="ctv_gradientEndDisabledColor" format="color" />
         <!--渐变方向-->
         <attr name="ctv_gradientDirection" format="enum">
             <enum name="topToBottom" value="0" />
@@ -40,7 +40,7 @@
             <enum name="topLeftToBottomRight" value="2" />
             <enum name="bottomLeftToTopRight" value="3" />
         </attr>
-        <attr name="ctv_gradientDirectionUnenabled" format="enum">
+        <attr name="ctv_gradientDirectionDisabled" format="enum">
             <enum name="topToBottom" value="0" />
             <enum name="leftToRight" value="1" />
             <enum name="topLeftToBottomRight" value="2" />
@@ -101,5 +101,7 @@
         </attr>
         <!--切换的渐变，毫秒，默认0，无效果-->
         <attr name="ctv_fadeDuring" format="integer" />
+        <!--5.0+以上的涟漪效果，默认开启，与渐变、边框颜色等配置冲突时建议关闭-->
+        <attr name="ctv_ripple" format="boolean" />
     </declare-styleable>
 </resources>

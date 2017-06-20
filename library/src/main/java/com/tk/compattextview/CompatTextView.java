@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableContainer;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,6 +24,7 @@ import android.util.AttributeSet;
  *              不再需要写大量的shape、selector文件配置；
  *              支持上下左右的drawable大小配置，SVG支持、Tint着色支持；
  *              支持上下左右的drawable的对齐方式配置；
+ *              5.0+配置pressed时点击涟漪效果；
  * </pre>
  */
 public class CompatTextView extends AppCompatTextView {
@@ -33,29 +35,30 @@ public class CompatTextView extends AppCompatTextView {
     /**
      * topLeft , topRight , bottomRight , bottomLeft
      */
-    private float[] mCornerRadius = new float[4];
+    private float[] mCornerRadius;
     private int mStrokeWidth;
     /**
-     * enabled , pressed , selected , unenabled
+     * enabled , pressed , selected , disabled
      */
-    private int[] mSolidColor = new int[4];
-    private int[] mStrokeColor = new int[4];
+    private int[] mSolidColor;
+    private int[] mStrokeColor;
     /**
      * left , top , right , bottom
      */
-    private int[] mTint = new int[4];
-    private Drawable[] mTintDrawable = new Drawable[4];
+    private int[] mTint;
+    private Drawable[] mTintDrawable;
     /**
      * left , top , right , bottom
      */
-    private int[] mDrawableAligh = new int[4];
+    private int[] mDrawableAligh;
     /**
-     * enabled , pressed , selected , unenabled
+     * enabled , pressed , selected , disabled
      */
-    private int[] mGradientStartColor = new int[4];
-    private int[] mGradientEndColor = new int[4];
-    private int[] mGradientDircetion = new int[4];
+    private int[] mGradientStartColor;
+    private int[] mGradientEndColor;
+    private int[] mGradientDircetion;
     private int mFadeDuring = 0;
+    private boolean mRipple = true;
 
     public CompatTextView(Context context) {
         super(context);
@@ -72,6 +75,16 @@ public class CompatTextView extends AppCompatTextView {
     }
 
     private void init(Context context, AttributeSet attrs) {
+        mCornerRadius = new float[4];
+        mSolidColor = new int[4];
+        mStrokeColor = new int[4];
+        mTint = new int[4];
+        mTintDrawable = new Drawable[4];
+        mDrawableAligh = new int[4];
+        mGradientStartColor = new int[4];
+        mGradientEndColor = new int[4];
+        mGradientDircetion = new int[4];
+
         TintTypedArray array = TintTypedArray.obtainStyledAttributes(context, attrs, R.styleable.CompatTextView);
         //初始化圆角参数
         initRadius(array);
@@ -90,6 +103,7 @@ public class CompatTextView extends AppCompatTextView {
         //初始化渐变参数
         initGradient(array);
         mFadeDuring = array.getInt(R.styleable.CompatTextView_ctv_fadeDuring, 0);
+        mRipple = array.getBoolean(R.styleable.CompatTextView_ctv_ripple, true);
         array.recycle();
 
         Drawable[] drawables = getCompoundDrawables();
@@ -127,7 +141,7 @@ public class CompatTextView extends AppCompatTextView {
         mStrokeColor[0] = array.getColor(R.styleable.CompatTextView_ctv_strokeColor, Color.GRAY);
         mStrokeColor[1] = array.getColor(R.styleable.CompatTextView_ctv_strokePressedColor, mStrokeColor[0]);
         mStrokeColor[2] = array.getColor(R.styleable.CompatTextView_ctv_strokeSelectedColor, mStrokeColor[0]);
-        mStrokeColor[3] = array.getColor(R.styleable.CompatTextView_ctv_strokeUnenabledColor, mStrokeColor[0]);
+        mStrokeColor[3] = array.getColor(R.styleable.CompatTextView_ctv_strokeDisabledColor, mStrokeColor[0]);
     }
 
     /**
@@ -136,10 +150,10 @@ public class CompatTextView extends AppCompatTextView {
      * @param array
      */
     private void initSolidColor(TintTypedArray array) {
-        mSolidColor[0] = array.getColor(R.styleable.CompatTextView_ctv_solidColor, 0);
-        mSolidColor[1] = array.getColor(R.styleable.CompatTextView_ctv_solidPressedColor, 0);
-        mSolidColor[2] = array.getColor(R.styleable.CompatTextView_ctv_solidSelectedColor, 0);
-        mSolidColor[3] = array.getColor(R.styleable.CompatTextView_ctv_solidUnenabledColor, 0);
+        mSolidColor[0] = array.getColor(R.styleable.CompatTextView_ctv_solidColor, -2);
+        mSolidColor[1] = array.getColor(R.styleable.CompatTextView_ctv_solidPressedColor, -2);
+        mSolidColor[2] = array.getColor(R.styleable.CompatTextView_ctv_solidSelectedColor, -2);
+        mSolidColor[3] = array.getColor(R.styleable.CompatTextView_ctv_solidDisabledColor, -2);
     }
 
     /**
@@ -149,10 +163,10 @@ public class CompatTextView extends AppCompatTextView {
      */
     private void initTextColor(TintTypedArray array) {
         int[] colors = new int[4];
-        colors[0] = array.getColor(R.styleable.CompatTextView_ctv_textColor, getTextColors().getDefaultColor());
-        colors[1] = array.getColor(R.styleable.CompatTextView_ctv_textPressedColor, colors[0]);
-        colors[2] = array.getColor(R.styleable.CompatTextView_ctv_textSelectedColor, colors[0]);
-        colors[3] = array.getColor(R.styleable.CompatTextView_ctv_textUnenabledColor, colors[0]);
+        colors[3] = array.getColor(R.styleable.CompatTextView_ctv_textColor, getTextColors().getDefaultColor());
+        colors[0] = array.getColor(R.styleable.CompatTextView_ctv_textSelectedColor, colors[3]);
+        colors[1] = array.getColor(R.styleable.CompatTextView_ctv_textPressedColor, colors[3]);
+        colors[2] = array.getColor(R.styleable.CompatTextView_ctv_textDisabledColor, colors[3]);
         setTextColor(new ColorStateList(STATES, colors));
     }
 
@@ -162,10 +176,10 @@ public class CompatTextView extends AppCompatTextView {
      * @param array
      */
     private void initTint(TintTypedArray array) {
-        mTint[0] = array.getColor(R.styleable.CompatTextView_ctv_tintLeft, 0);
-        mTint[1] = array.getColor(R.styleable.CompatTextView_ctv_tintTop, 0);
-        mTint[2] = array.getColor(R.styleable.CompatTextView_ctv_tintRight, 0);
-        mTint[3] = array.getColor(R.styleable.CompatTextView_ctv_tintBottom, 0);
+        mTint[0] = array.getColor(R.styleable.CompatTextView_ctv_tintLeft, -2);
+        mTint[1] = array.getColor(R.styleable.CompatTextView_ctv_tintTop, -2);
+        mTint[2] = array.getColor(R.styleable.CompatTextView_ctv_tintRight, -2);
+        mTint[3] = array.getColor(R.styleable.CompatTextView_ctv_tintBottom, -2);
     }
 
     /**
@@ -209,7 +223,7 @@ public class CompatTextView extends AppCompatTextView {
      * @param height
      */
     private static void tintDrawable(int tint, @NonNull Drawable drawable, int width, int height) {
-        if (0 != tint) {
+        if (-2 != tint) {
             drawable = DrawableCompat.wrap(drawable.mutate());
             DrawableCompat.setTint(drawable, tint);
         }
@@ -317,20 +331,20 @@ public class CompatTextView extends AppCompatTextView {
      * @param array
      */
     private void initGradient(TintTypedArray array) {
-        mGradientStartColor[0] = array.getColor(R.styleable.CompatTextView_ctv_gradientStartColor, 0);
-        mGradientStartColor[1] = array.getColor(R.styleable.CompatTextView_ctv_gradientStartPressedColor, 0);
-        mGradientStartColor[2] = array.getColor(R.styleable.CompatTextView_ctv_gradientStartSelectedColor, 0);
-        mGradientStartColor[3] = array.getColor(R.styleable.CompatTextView_ctv_gradientStartUnenabledColor, 0);
+        mGradientStartColor[0] = array.getColor(R.styleable.CompatTextView_ctv_gradientStartColor, -2);
+        mGradientStartColor[1] = array.getColor(R.styleable.CompatTextView_ctv_gradientStartPressedColor, -2);
+        mGradientStartColor[2] = array.getColor(R.styleable.CompatTextView_ctv_gradientStartSelectedColor, -2);
+        mGradientStartColor[3] = array.getColor(R.styleable.CompatTextView_ctv_gradientStartDisabledColor, -2);
 
-        mGradientEndColor[0] = array.getColor(R.styleable.CompatTextView_ctv_gradientEndColor, 0);
-        mGradientEndColor[1] = array.getColor(R.styleable.CompatTextView_ctv_gradientEndPressedColor, 0);
-        mGradientEndColor[2] = array.getColor(R.styleable.CompatTextView_ctv_gradientEndSelectedColor, 0);
-        mGradientEndColor[3] = array.getColor(R.styleable.CompatTextView_ctv_gradientEndUnenabledColor, 0);
+        mGradientEndColor[0] = array.getColor(R.styleable.CompatTextView_ctv_gradientEndColor, -2);
+        mGradientEndColor[1] = array.getColor(R.styleable.CompatTextView_ctv_gradientEndPressedColor, -2);
+        mGradientEndColor[2] = array.getColor(R.styleable.CompatTextView_ctv_gradientEndSelectedColor, -2);
+        mGradientEndColor[3] = array.getColor(R.styleable.CompatTextView_ctv_gradientEndDisabledColor, -2);
 
         mGradientDircetion[0] = array.getInt(R.styleable.CompatTextView_ctv_gradientDirection, 0);
         mGradientDircetion[1] = array.getInt(R.styleable.CompatTextView_ctv_gradientDirectionPressed, 0);
         mGradientDircetion[2] = array.getInt(R.styleable.CompatTextView_ctv_gradientDirectionSelected, 0);
-        mGradientDircetion[3] = array.getInt(R.styleable.CompatTextView_ctv_gradientDirectionUnenabled, 0);
+        mGradientDircetion[3] = array.getInt(R.styleable.CompatTextView_ctv_gradientDirectionDisabled, 0);
     }
 
     /**
@@ -339,19 +353,21 @@ public class CompatTextView extends AppCompatTextView {
      * @return StateListDrawable or null
      */
     private Drawable processDrawable() {
-        StateListDrawable drawable = new StateListDrawable();
-
+        if(null==mCornerRadius){
+            //// TODO: 2017/6/20 setEnabled和setSelected会比构造函数先执行？
+            return null;
+        }
         float[] f = new float[]{mCornerRadius[0], mCornerRadius[0],
                 mCornerRadius[1], mCornerRadius[1],
                 mCornerRadius[2], mCornerRadius[2],
                 mCornerRadius[3], mCornerRadius[3]};
         GradientDrawable enable = null;
-        if (0 != mGradientStartColor[0] && 0 != mGradientEndColor[0]) {
+        if (-2 != mGradientStartColor[0] && -2 != mGradientEndColor[0]) {
             enable = new GradientDrawable(processOrientation(mGradientDircetion[0]),
                     new int[]{mGradientStartColor[0], mGradientEndColor[0]});
             enable.setCornerRadii(f);
             enable.setStroke(mStrokeWidth, mStrokeColor[0]);
-        } else if (0 != mSolidColor[0]) {
+        } else if (-2 != mSolidColor[0]) {
             enable = new GradientDrawable();
             enable.setColor(mSolidColor[0]);
             enable.setCornerRadii(f);
@@ -359,12 +375,12 @@ public class CompatTextView extends AppCompatTextView {
         }
 
         GradientDrawable pressed = null;
-        if (0 != mGradientStartColor[1] && 0 != mGradientEndColor[1]) {
+        if (-2 != mGradientStartColor[1] && -2 != mGradientEndColor[1]) {
             pressed = new GradientDrawable(processOrientation(mGradientDircetion[1]),
                     new int[]{mGradientStartColor[1], mGradientEndColor[1]});
             pressed.setCornerRadii(f);
             pressed.setStroke(mStrokeWidth, mStrokeColor[1]);
-        } else if (0 != mSolidColor[1]) {
+        } else if (-2 != mSolidColor[1]) {
             pressed = new GradientDrawable();
             pressed.setColor(mSolidColor[1]);
             pressed.setCornerRadii(f);
@@ -372,49 +388,77 @@ public class CompatTextView extends AppCompatTextView {
         }
 
         GradientDrawable selected = null;
-        if (0 != mGradientStartColor[2] && 0 != mGradientEndColor[2]) {
+        if (-2 != mGradientStartColor[2] && -2 != mGradientEndColor[2]) {
             selected = new GradientDrawable(processOrientation(mGradientDircetion[2]),
                     new int[]{mGradientStartColor[2], mGradientEndColor[2]});
             selected.setCornerRadii(f);
             selected.setStroke(mStrokeWidth, mStrokeColor[2]);
-        } else if (0 != mSolidColor[2]) {
+        } else if (-2 != mSolidColor[2]) {
             selected = new GradientDrawable();
             selected.setColor(mSolidColor[2]);
             selected.setCornerRadii(f);
             selected.setStroke(mStrokeWidth, mStrokeColor[2]);
         }
-        GradientDrawable unenabled = null;
-        if (0 != mGradientStartColor[3] && 0 != mGradientEndColor[3]) {
-            unenabled = new GradientDrawable(processOrientation(mGradientDircetion[3]),
+        GradientDrawable disabled = null;
+        if (-2 != mGradientStartColor[3] && -2 != mGradientEndColor[3]) {
+            disabled = new GradientDrawable(processOrientation(mGradientDircetion[3]),
                     new int[]{mGradientStartColor[3], mGradientEndColor[3]});
-            unenabled.setCornerRadii(f);
-            unenabled.setStroke(mStrokeWidth, mStrokeColor[3]);
-        } else if (0 != mSolidColor[3]) {
-            unenabled = new GradientDrawable();
-            unenabled.setColor(mSolidColor[3]);
-            unenabled.setCornerRadii(f);
-            unenabled.setStroke(mStrokeWidth, mStrokeColor[3]);
+            disabled.setCornerRadii(f);
+            disabled.setStroke(mStrokeWidth, mStrokeColor[3]);
+        } else if (-2 != mSolidColor[3]) {
+            disabled = new GradientDrawable();
+            disabled.setColor(mSolidColor[3]);
+            disabled.setCornerRadii(f);
+            disabled.setStroke(mStrokeWidth, mStrokeColor[3]);
         }
-
+        if (isEnabled()) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP
+                    && mRipple
+                    && (!isSelected()
+                    && null != pressed
+                    && null != enable)) {
+                return new RippleDrawable(ColorStateList.valueOf(mSolidColor[1]), enable, pressed);
+            }
+        }
+        StateListDrawable stateListDrawable = new StateListDrawable();
         if (null != selected) {
-            drawable.addState(STATES[0], selected);
+            stateListDrawable.addState(STATES[0], selected);
         }
         if (null != pressed) {
-            drawable.addState(STATES[1], pressed);
+            stateListDrawable.addState(STATES[1], pressed);
         }
-        if (null != unenabled) {
-            drawable.addState(STATES[2], unenabled);
+        if (null != disabled) {
+            stateListDrawable.addState(STATES[2], disabled);
         }
         if (null != enable) {
-            drawable.addState(STATES[3], enable);
+            stateListDrawable.addState(STATES[3], enable);
         }
-        DrawableContainer.DrawableContainerState state = ((DrawableContainer.DrawableContainerState) drawable.getConstantState());
-        if (state == null || 0 == state.getChildCount()) {
+        DrawableContainer.DrawableContainerState state = ((DrawableContainer.DrawableContainerState) stateListDrawable.getConstantState());
+        if (null == state || 0 == state.getChildCount()) {
             return null;
         }
-        drawable.setEnterFadeDuration(mFadeDuring);
-        drawable.setExitFadeDuration(mFadeDuring);
-        return drawable;
+        stateListDrawable.setEnterFadeDuration(mFadeDuring);
+        stateListDrawable.setExitFadeDuration(mFadeDuring);
+
+        return stateListDrawable;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        Drawable drawable = processDrawable();
+        if (null != drawable) {
+            setBackgroundDrawable(drawable);
+        }
+    }
+
+    @Override
+    public void setSelected(boolean selected) {
+        super.setSelected(selected);
+        Drawable drawable = processDrawable();
+        if (null != drawable) {
+            setBackgroundDrawable(drawable);
+        }
     }
 
     /**

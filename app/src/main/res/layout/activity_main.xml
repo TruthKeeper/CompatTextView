@@ -42,7 +42,7 @@
                 android:text="不可点击的按钮"
                 android:textColor="@android:color/white"
                 app:ctv_solidColor="@color/skyblue"
-                app:ctv_solidUnenabledColor="@android:color/darker_gray" />
+                app:ctv_solidDisabledColor="@android:color/darker_gray" />
         </LinearLayout>
 
         <LinearLayout
@@ -62,7 +62,6 @@
                 app:ctv_solidColor="@color/colorAccent"
                 app:ctv_solidPressedColor="@color/green"
                 app:ctv_strokeColor="@color/skyblue"
-                app:ctv_strokePressedColor="@color/blue"
                 app:ctv_strokeWidth="4dp" />
 
             <com.tk.compattextview.CompatTextView
@@ -99,6 +98,7 @@
                 app:ctv_gradientEndPressedColor="@color/red"
                 app:ctv_gradientStartColor="@android:color/white"
                 app:ctv_gradientStartPressedColor="@color/skyblue"
+                app:ctv_ripple="false"
                 app:ctv_textColor="@android:color/black"
                 app:ctv_textPressedColor="@android:color/white" />
 
@@ -116,6 +116,7 @@
                 app:ctv_gradientEndPressedColor="@android:color/white"
                 app:ctv_gradientStartColor="@color/green"
                 app:ctv_gradientStartPressedColor="@color/green"
+                app:ctv_ripple="false"
                 app:ctv_strokeColor="@android:color/black"
                 app:ctv_strokePressedColor="@color/colorAccent"
                 app:ctv_strokeWidth="4dp"
@@ -171,6 +172,7 @@
                 android:textColor="@android:color/white"
                 app:ctv_bottomLeftRadius="32dp"
                 app:ctv_bottomRightRadius="32dp"
+                app:ctv_ripple="false"
                 app:ctv_solidColor="@color/green"
                 app:ctv_solidPressedColor="@color/blue"
                 app:ctv_strokeColor="@color/red"
