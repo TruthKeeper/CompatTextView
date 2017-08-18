@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="CompatTextView">
+        <!--一键配置圆角-->
+        <attr name="ctv_radius" format="dimension" />
         <!--四个位置的圆角，传入对应宽度或者高度的一半就是圆形-->
         <attr name="ctv_topLeftRadius" format="dimension" />
         <attr name="ctv_topRightRadius" format="dimension" />

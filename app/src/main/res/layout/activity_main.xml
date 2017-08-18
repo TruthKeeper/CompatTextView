@@ -25,14 +25,11 @@
                 android:clickable="true"
                 android:padding="12dp"
                 android:text="普通的圆角按钮"
-                app:ctv_bottomLeftRadius="6dp"
-                app:ctv_bottomRightRadius="6dp"
+                app:ctv_radius="6dp"
                 app:ctv_solidColor="@color/skyblue"
                 app:ctv_solidPressedColor="@color/blue"
                 app:ctv_textColor="@android:color/black"
-                app:ctv_textPressedColor="@color/orange"
-                app:ctv_topLeftRadius="6dp"
-                app:ctv_topRightRadius="6dp" />
+                app:ctv_textPressedColor="@color/orange" />
 
             <com.tk.compattextview.CompatTextView
                 android:layout_width="wrap_content"
@@ -113,7 +110,7 @@
                 app:ctv_gradientDirection="leftToRight"
                 app:ctv_gradientDirectionPressed="bottomLeftToTopRight"
                 app:ctv_gradientEndColor="@color/blue"
-                app:ctv_gradientEndPressedColor="@android:color/white"
+                app:ctv_gradientEndPressedColor="@android:color/black"
                 app:ctv_gradientStartColor="@color/green"
                 app:ctv_gradientStartPressedColor="@color/green"
                 app:ctv_ripple="false"
@@ -138,13 +135,10 @@
                 android:gravity="center"
                 android:text="点击选择的按钮"
                 android:textColor="@android:color/white"
-                app:ctv_bottomLeftRadius="32dp"
-                app:ctv_bottomRightRadius="32dp"
+                app:ctv_radius="32dp"
                 app:ctv_solidColor="@color/skyblue"
                 app:ctv_solidPressedColor="@color/blue"
-                app:ctv_solidSelectedColor="@color/orange"
-                app:ctv_topLeftRadius="32dp"
-                app:ctv_topRightRadius="32dp" />
+                app:ctv_solidSelectedColor="@color/orange" />
 
             <com.tk.compattextview.CompatTextView
                 android:layout_width="64dp"
@@ -155,12 +149,9 @@
                 android:padding="12dp"
                 android:text="圆"
                 android:textColor="@android:color/white"
-                app:ctv_bottomLeftRadius="32dp"
-                app:ctv_bottomRightRadius="32dp"
+                app:ctv_radius="32dp"
                 app:ctv_solidColor="@color/red"
-                app:ctv_solidPressedColor="@color/orange"
-                app:ctv_topLeftRadius="32dp"
-                app:ctv_topRightRadius="32dp" />
+                app:ctv_solidPressedColor="@color/orange" />
 
             <com.tk.compattextview.CompatTextView
                 android:layout_width="64dp"
@@ -170,15 +161,13 @@
                 android:padding="12dp"
                 android:text="圆环"
                 android:textColor="@android:color/white"
-                app:ctv_bottomLeftRadius="32dp"
                 app:ctv_bottomRightRadius="32dp"
+
                 app:ctv_ripple="false"
                 app:ctv_solidColor="@color/green"
                 app:ctv_solidPressedColor="@color/blue"
                 app:ctv_strokeColor="@color/red"
-                app:ctv_strokeWidth="4dp"
-                app:ctv_topLeftRadius="32dp"
-                app:ctv_topRightRadius="32dp" />
+                app:ctv_strokeWidth="4dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -251,6 +240,27 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.tk.compattextview.CompatTextView
+                android:id="@+id/btn_drawable_config"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:text="动态配置Drawable"
+                app:ctv_radius="6dp"
+                app:ctv_solidColor="@color/skyblue"
+                app:ctv_solidPressedColor="@color/blue"
+                app:ctv_textColor="@android:color/black" />
+
+        </LinearLayout>
+
         <com.tk.compattextview.CompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -261,9 +271,8 @@
             android:padding="12dp"
             android:paddingLeft="10dp"
             android:text="喜欢点个赞呗"
-            app:ctv_bottomLeftRadius="4dp"
-            app:ctv_bottomRightRadius="4dp"
             app:ctv_fadeDuring="200"
+            app:ctv_radius="4dp"
             app:ctv_solidColor="@color/skyblue"
             app:ctv_solidPressedColor="@color/blue"
             app:ctv_textColor="@android:color/white"
@@ -271,8 +280,6 @@
             app:ctv_tintDrawableLeft="@drawable/vector_github"
             app:ctv_tintDrawableLeftHeight="28dp"
             app:ctv_tintDrawableLeftWidth="28dp"
-            app:ctv_tintLeft="@color/colorAccent"
-            app:ctv_topLeftRadius="4dp"
-            app:ctv_topRightRadius="4dp" />
+            app:ctv_tintLeft="@color/colorAccent" />
     </LinearLayout>
 </ScrollView>
