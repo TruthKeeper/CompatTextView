@@ -1,18 +1,20 @@
 package com.tk.compattextview;
 
+import android.animation.ObjectAnimator;
+import android.animation.StateListAnimator;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableContainer;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.TintTypedArray;
 import android.util.AttributeSet;
 
 import java.util.Arrays;
@@ -34,6 +36,8 @@ public class CompatTextView extends AppCompatTextView {
             {android.R.attr.state_pressed},
             {-android.R.attr.state_enabled},
             {}};
+    public static final int DEFAULT_Z_DURING = 120;
+    public static final int DEFAULT_Z_MAX_LIFT = 8;
     private static final int NULL = -2;
     /**
      * topLeft , topRight , bottomRight , bottomLeft
@@ -58,6 +62,7 @@ public class CompatTextView extends AppCompatTextView {
      * enabled , pressed , selected , disabled
      */
     private int[] mGradientStartColor;
+    private int[] mGradientCenterColor;
     private int[] mGradientEndColor;
     /**
      * gradient directions
@@ -72,6 +77,9 @@ public class CompatTextView extends AppCompatTextView {
      * in pressed config
      */
     private boolean mRipple = true;
+    private boolean mZ = false;
+    private int mZDuring = DEFAULT_Z_DURING;
+    private int mZMaxLift = DEFAULT_Z_MAX_LIFT;
 
     public CompatTextView(Context context) {
         super(context);
@@ -95,10 +103,11 @@ public class CompatTextView extends AppCompatTextView {
         mTintDrawable = new Drawable[4];
         mDrawableAlign = new int[4];
         mGradientStartColor = new int[4];
+        mGradientCenterColor = new int[4];
         mGradientEndColor = new int[4];
         mGradientDirection = new int[4];
 
-        TintTypedArray array = TintTypedArray.obtainStyledAttributes(context, attrs, R.styleable.CompatTextView);
+        TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.CompatTextView);
         //初始化圆角参数
         initRadius(array);
         //初始化边框参数
@@ -115,8 +124,10 @@ public class CompatTextView extends AppCompatTextView {
         initAlign(array);
         //初始化渐变参数
         initGradient(array);
+        //初始化5.0+参数
+        initLollipop(array);
         mFadeDuring = array.getInt(R.styleable.CompatTextView_ctv_fadeDuring, 0);
-        mRipple = array.getBoolean(R.styleable.CompatTextView_ctv_ripple, true);
+
         array.recycle();
 
         Drawable[] drawables = getCompoundDrawables();
@@ -125,9 +136,24 @@ public class CompatTextView extends AppCompatTextView {
                 null == mTintDrawable[2] ? drawables[2] : mTintDrawable[2],
                 null == mTintDrawable[3] ? drawables[3] : mTintDrawable[3]);
 
-        Drawable drawable = processDrawable();
+        Drawable drawable = processBackgroundDrawable();
         if (null != drawable) {
             setBackgroundDrawable(drawable);
+        }
+        processZ();
+    }
+
+    private void processZ() {
+        if (mZ && Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            StateListAnimator animator = new StateListAnimator();
+            ObjectAnimator lift = ObjectAnimator.ofFloat(this, "translationZ", 0, mZMaxLift)
+                    .setDuration(mZDuring);
+            ObjectAnimator drop = ObjectAnimator.ofFloat(this, "translationZ", 0)
+                    .setDuration(mZDuring);
+
+            animator.addState(new int[]{STATES[1][0], -STATES[2][0]}, lift);
+            animator.addState(STATES[3], drop);
+            setStateListAnimator(animator);
         }
     }
 
@@ -137,9 +163,9 @@ public class CompatTextView extends AppCompatTextView {
      *
      * @param array
      */
-    private void initRadius(TintTypedArray array) {
+    private void initRadius(TypedArray array) {
         float r = array.getDimension(R.styleable.CompatTextView_ctv_radius, 0);
-        if (0 != r) {
+        if (r > 0) {
             Arrays.fill(mCornerRadius, r);
             return;
         }
@@ -154,7 +180,7 @@ public class CompatTextView extends AppCompatTextView {
      *
      * @param array
      */
-    private void initStroke(TintTypedArray array) {
+    private void initStroke(TypedArray array) {
         mStrokeWidth = array.getDimensionPixelOffset(R.styleable.CompatTextView_ctv_strokeWidth, 0);
         // default color
         mStrokeColor[0] = array.getColor(R.styleable.CompatTextView_ctv_strokeColor, Color.GRAY);
@@ -168,7 +194,7 @@ public class CompatTextView extends AppCompatTextView {
      *
      * @param array
      */
-    private void initSolidColor(TintTypedArray array) {
+    private void initSolidColor(TypedArray array) {
         mSolidColor[0] = array.getColor(R.styleable.CompatTextView_ctv_solidColor, NULL);
         mSolidColor[1] = array.getColor(R.styleable.CompatTextView_ctv_solidPressedColor, NULL);
         mSolidColor[2] = array.getColor(R.styleable.CompatTextView_ctv_solidSelectedColor, NULL);
@@ -180,11 +206,11 @@ public class CompatTextView extends AppCompatTextView {
      *
      * @param array
      */
-    private void initTextColor(TintTypedArray array) {
+    private void initTextColor(TypedArray array) {
         int[] colors = new int[4];
         colors[3] = array.getColor(R.styleable.CompatTextView_ctv_textColor, getTextColors().getDefaultColor());
-        colors[0] = array.getColor(R.styleable.CompatTextView_ctv_textSelectedColor, colors[3]);
         colors[1] = array.getColor(R.styleable.CompatTextView_ctv_textPressedColor, colors[3]);
+        colors[0] = array.getColor(R.styleable.CompatTextView_ctv_textSelectedColor, colors[3]);
         colors[2] = array.getColor(R.styleable.CompatTextView_ctv_textDisabledColor, colors[3]);
         setTextColor(new ColorStateList(STATES, colors));
     }
@@ -194,7 +220,7 @@ public class CompatTextView extends AppCompatTextView {
      *
      * @param array
      */
-    private void initTint(TintTypedArray array) {
+    private void initTint(TypedArray array) {
         mTint[0] = array.getColor(R.styleable.CompatTextView_ctv_tintLeft, NULL);
         mTint[1] = array.getColor(R.styleable.CompatTextView_ctv_tintTop, NULL);
         mTint[2] = array.getColor(R.styleable.CompatTextView_ctv_tintRight, NULL);
@@ -206,47 +232,48 @@ public class CompatTextView extends AppCompatTextView {
      *
      * @param array
      */
-    private void initTintDrawable(TintTypedArray array) {
-        mTintDrawable[0] = array.getDrawable(R.styleable.CompatTextView_ctv_tintDrawableLeft);
+    private void initTintDrawable(TypedArray array) {
+        mTintDrawable[0] = TintUtils.getTintDrawable(getContext(), array, R.styleable.CompatTextView_ctv_tintDrawableLeft);
         if (null != mTintDrawable[0]) {
             int width = array.getDimensionPixelOffset(R.styleable.CompatTextView_ctv_tintDrawableLeftWidth, mTintDrawable[0].getIntrinsicWidth());
             int height = array.getDimensionPixelOffset(R.styleable.CompatTextView_ctv_tintDrawableLeftHeight, mTintDrawable[0].getIntrinsicHeight());
-            tintDrawable(mTint[0], mTintDrawable[0], width, height);
+            mTintDrawable[0] = wrapperTintDrawable(mTint[0], mTintDrawable[0], width, height);
         }
-        mTintDrawable[1] = array.getDrawable(R.styleable.CompatTextView_ctv_tintDrawableTop);
+        mTintDrawable[1] = TintUtils.getTintDrawable(getContext(), array, R.styleable.CompatTextView_ctv_tintDrawableTop);
         if (null != mTintDrawable[1]) {
             int width = array.getDimensionPixelOffset(R.styleable.CompatTextView_ctv_tintDrawableTopWidth, mTintDrawable[1].getIntrinsicWidth());
             int height = array.getDimensionPixelOffset(R.styleable.CompatTextView_ctv_tintDrawableTopHeight, mTintDrawable[1].getIntrinsicHeight());
-            tintDrawable(mTint[1], mTintDrawable[1], width, height);
+            mTintDrawable[1] = wrapperTintDrawable(mTint[1], mTintDrawable[1], width, height);
         }
-        mTintDrawable[2] = array.getDrawable(R.styleable.CompatTextView_ctv_tintDrawableRight);
+        mTintDrawable[2] = TintUtils.getTintDrawable(getContext(), array, R.styleable.CompatTextView_ctv_tintDrawableRight);
         if (null != mTintDrawable[2]) {
             int width = array.getDimensionPixelOffset(R.styleable.CompatTextView_ctv_tintDrawableRightWidth, mTintDrawable[2].getIntrinsicWidth());
             int height = array.getDimensionPixelOffset(R.styleable.CompatTextView_ctv_tintDrawableRightHeight, mTintDrawable[2].getIntrinsicHeight());
-            tintDrawable(mTint[2], mTintDrawable[2], width, height);
+            mTintDrawable[2] = wrapperTintDrawable(mTint[2], mTintDrawable[2], width, height);
         }
-        mTintDrawable[3] = array.getDrawable(R.styleable.CompatTextView_ctv_tintDrawableBottom);
+        mTintDrawable[3] = TintUtils.getTintDrawable(getContext(), array, R.styleable.CompatTextView_ctv_tintDrawableBottom);
         if (null != mTintDrawable[3]) {
             int width = array.getDimensionPixelOffset(R.styleable.CompatTextView_ctv_tintDrawableBottomWidth, mTintDrawable[3].getIntrinsicWidth());
             int height = array.getDimensionPixelOffset(R.styleable.CompatTextView_ctv_tintDrawableBottomHeight, mTintDrawable[3].getIntrinsicHeight());
-            tintDrawable(mTint[3], mTintDrawable[3], width, height);
+            mTintDrawable[3] = wrapperTintDrawable(mTint[3], mTintDrawable[3], width, height);
         }
     }
+
 
     /**
      * tint drawable
      *
-     * @param tint
+     * @param color
      * @param drawable
      * @param width
      * @param height
      */
-    private static void tintDrawable(int tint, @NonNull Drawable drawable, int width, int height) {
-        if (NULL != tint) {
-            drawable = DrawableCompat.wrap(drawable.mutate());
-            DrawableCompat.setTint(drawable, tint);
+    private Drawable wrapperTintDrawable(int color, @NonNull Drawable drawable, int width, int height) {
+        if (color != NULL) {
+            drawable = TintUtils.tint(drawable, color);
         }
         drawable.setBounds(0, 0, width, height);
+        return drawable;
     }
 
     /**
@@ -254,7 +281,7 @@ public class CompatTextView extends AppCompatTextView {
      *
      * @param array
      */
-    private void initAlign(TintTypedArray array) {
+    private void initAlign(TypedArray array) {
         mDrawableAlign[0] = array.getInt(R.styleable.CompatTextView_ctv_drawableLeftAlign, 1);
         mDrawableAlign[1] = array.getInt(R.styleable.CompatTextView_ctv_drawableTopAlign, 1);
         mDrawableAlign[2] = array.getInt(R.styleable.CompatTextView_ctv_drawableRightAlign, 1);
@@ -356,11 +383,16 @@ public class CompatTextView extends AppCompatTextView {
      *
      * @param array
      */
-    private void initGradient(TintTypedArray array) {
+    private void initGradient(TypedArray array) {
         mGradientStartColor[0] = array.getColor(R.styleable.CompatTextView_ctv_gradientStartColor, NULL);
         mGradientStartColor[1] = array.getColor(R.styleable.CompatTextView_ctv_gradientStartPressedColor, NULL);
         mGradientStartColor[2] = array.getColor(R.styleable.CompatTextView_ctv_gradientStartSelectedColor, NULL);
         mGradientStartColor[3] = array.getColor(R.styleable.CompatTextView_ctv_gradientStartDisabledColor, NULL);
+
+        mGradientCenterColor[0] = array.getColor(R.styleable.CompatTextView_ctv_gradientCenterColor, NULL);
+        mGradientCenterColor[1] = array.getColor(R.styleable.CompatTextView_ctv_gradientCenterPressedColor, NULL);
+        mGradientCenterColor[2] = array.getColor(R.styleable.CompatTextView_ctv_gradientCenterSelectedColor, NULL);
+        mGradientCenterColor[3] = array.getColor(R.styleable.CompatTextView_ctv_gradientCenterDisabledColor, NULL);
 
         mGradientEndColor[0] = array.getColor(R.styleable.CompatTextView_ctv_gradientEndColor, NULL);
         mGradientEndColor[1] = array.getColor(R.styleable.CompatTextView_ctv_gradientEndPressedColor, NULL);
@@ -374,29 +406,40 @@ public class CompatTextView extends AppCompatTextView {
     }
 
     /**
+     * @param array
+     */
+    private void initLollipop(TypedArray array) {
+        mRipple = array.getBoolean(R.styleable.CompatTextView_ctv_ripple, true);
+
+        mZ = array.getBoolean(R.styleable.CompatTextView_ctv_z, false);
+        mZDuring = array.getInt(R.styleable.CompatTextView_ctv_z_during, DEFAULT_Z_DURING);
+        mZMaxLift = array.getInt(R.styleable.CompatTextView_ctv_z_max_lift, DEFAULT_Z_MAX_LIFT);
+    }
+
+    /**
      * process drawable
      *
      * @return StateListDrawable or null
      */
-    private Drawable processDrawable() {
+    private Drawable processBackgroundDrawable() {
         if (null == mCornerRadius) {
             //// TODO: 2017/6/20 setEnabled和setSelected会比构造函数先执行？
             return null;
         }
         GradientDrawable enable = generatePartDrawable(0);
-        GradientDrawable pressed = generatePartDrawable(1);
-        GradientDrawable selected = generatePartDrawable(2);
-        GradientDrawable disabled = generatePartDrawable(3);
 
         if (isEnabled()) {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP
                     && mRipple
                     && (!isSelected())
-                    && (null != pressed)
+                    && (NULL != mSolidColor[1])
                     && (null != enable)) {
-                return new RippleDrawable(ColorStateList.valueOf(mSolidColor[1]), enable, pressed);
+                return new RippleDrawable(ColorStateList.valueOf(mSolidColor[1]), enable, null);
             }
         }
+        GradientDrawable pressed = generatePartDrawable(1);
+        GradientDrawable selected = generatePartDrawable(2);
+        GradientDrawable disabled = generatePartDrawable(3);
         StateListDrawable stateListDrawable = new StateListDrawable();
         if (null != selected) {
             stateListDrawable.addState(STATES[0], selected);
@@ -433,10 +476,18 @@ public class CompatTextView extends AppCompatTextView {
                 mCornerRadius[1], mCornerRadius[1],
                 mCornerRadius[2], mCornerRadius[2],
                 mCornerRadius[3], mCornerRadius[3]};
-        if (NULL != mGradientStartColor[index] && NULL != mGradientEndColor[index]) {
+        if (NULL != mGradientStartColor[index] || NULL != mGradientCenterColor[index] || NULL != mGradientEndColor[index]) {
             //Gradient
-            drawable = new GradientDrawable(processOrientation(mGradientDirection[index]),
-                    new int[]{mGradientStartColor[index], mGradientEndColor[index]});
+            int[] colors = null;
+            if (NULL == mGradientCenterColor[index]) {
+                colors = new int[]{NULL == mGradientStartColor[index] ? Color.TRANSPARENT : mGradientStartColor[index],
+                        NULL == mGradientEndColor[index] ? Color.TRANSPARENT : mGradientEndColor[index]};
+            } else {
+                colors = new int[]{NULL == mGradientStartColor[index] ? Color.TRANSPARENT : mGradientStartColor[index],
+                        NULL == mGradientCenterColor[index] ? Color.TRANSPARENT : mGradientCenterColor[index],
+                        NULL == mGradientEndColor[index] ? Color.TRANSPARENT : mGradientEndColor[index]};
+            }
+            drawable = new GradientDrawable(processOrientation(mGradientDirection[index]), colors);
             drawable.setCornerRadii(f);
             drawable.setStroke(mStrokeWidth, mStrokeColor[index]);
         } else if (NULL != mSolidColor[index]) {
@@ -456,7 +507,7 @@ public class CompatTextView extends AppCompatTextView {
                 && mRipple
                 && (!isSelected())) {
             //涟漪模式下的适配
-            Drawable drawable = processDrawable();
+            Drawable drawable = processBackgroundDrawable();
             if (null != drawable) {
                 setBackgroundDrawable(drawable);
             }
@@ -469,7 +520,7 @@ public class CompatTextView extends AppCompatTextView {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP
                 && mRipple) {
             //涟漪模式下的适配
-            Drawable drawable = processDrawable();
+            Drawable drawable = processBackgroundDrawable();
             if (null != drawable) {
                 setBackgroundDrawable(drawable);
             }

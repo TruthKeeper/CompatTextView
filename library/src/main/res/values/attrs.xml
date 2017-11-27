@@ -25,24 +25,23 @@
         <attr name="ctv_textPressedColor" format="color" />
         <attr name="ctv_textSelectedColor" format="color" />
         <attr name="ctv_textDisabledColor" format="color" />
-        <!--渐变颜色-->
+        <!--渐变颜色 , 起始位置-->
         <attr name="ctv_gradientStartColor" format="color" />
         <attr name="ctv_gradientStartPressedColor" format="color" />
         <attr name="ctv_gradientStartSelectedColor" format="color" />
         <attr name="ctv_gradientStartDisabledColor" format="color" />
-
+        <!--渐变颜色 , 中间位置-->
+        <attr name="ctv_gradientCenterColor" format="color" />
+        <attr name="ctv_gradientCenterPressedColor" format="color" />
+        <attr name="ctv_gradientCenterSelectedColor" format="color" />
+        <attr name="ctv_gradientCenterDisabledColor" format="color" />
+        <!--渐变颜色 , 结束位置-->
         <attr name="ctv_gradientEndColor" format="color" />
         <attr name="ctv_gradientEndPressedColor" format="color" />
         <attr name="ctv_gradientEndSelectedColor" format="color" />
         <attr name="ctv_gradientEndDisabledColor" format="color" />
-        <!--渐变方向-->
+        <!--渐变方向 , 逆时针 , 默认从左到右-->
         <attr name="ctv_gradientDirection" format="enum">
-            <enum name="topToBottom" value="0" />
-            <enum name="leftToRight" value="1" />
-            <enum name="topLeftToBottomRight" value="2" />
-            <enum name="bottomLeftToTopRight" value="3" />
-        </attr>
-        <attr name="ctv_gradientDirectionDisabled" format="enum">
             <enum name="topToBottom" value="0" />
             <enum name="leftToRight" value="1" />
             <enum name="topLeftToBottomRight" value="2" />
@@ -60,23 +59,30 @@
             <enum name="topLeftToBottomRight" value="2" />
             <enum name="bottomLeftToTopRight" value="3" />
         </attr>
-        <!--Tint着色支持与drawable细腻配置-->
+        <attr name="ctv_gradientDirectionDisabled" format="enum">
+            <enum name="topToBottom" value="0" />
+            <enum name="leftToRight" value="1" />
+            <enum name="topLeftToBottomRight" value="2" />
+            <enum name="bottomLeftToTopRight" value="3" />
+        </attr>
+        <!--Tint着色状态-->
         <attr name="ctv_tintLeft" format="color" />
+        <attr name="ctv_tintRight" format="color" />
+        <attr name="ctv_tintTop" format="color" />
+        <attr name="ctv_tintBottom" format="color" />
+        <!--Drawable的配置-->
         <attr name="ctv_tintDrawableLeft" format="reference" />
         <attr name="ctv_tintDrawableLeftWidth" format="dimension" />
         <attr name="ctv_tintDrawableLeftHeight" format="dimension" />
 
-        <attr name="ctv_tintRight" format="color" />
         <attr name="ctv_tintDrawableRight" format="reference" />
         <attr name="ctv_tintDrawableRightWidth" format="dimension" />
         <attr name="ctv_tintDrawableRightHeight" format="dimension" />
 
-        <attr name="ctv_tintTop" format="color" />
         <attr name="ctv_tintDrawableTop" format="reference" />
         <attr name="ctv_tintDrawableTopWidth" format="dimension" />
         <attr name="ctv_tintDrawableTopHeight" format="dimension" />
 
-        <attr name="ctv_tintBottom" format="color" />
         <attr name="ctv_tintDrawableBottom" format="reference" />
         <attr name="ctv_tintDrawableBottomWidth" format="dimension" />
         <attr name="ctv_tintDrawableBottomHeight" format="dimension" />
@@ -101,9 +107,15 @@
             <enum name="center" value="1" />
             <enum name="right" value="2" />
         </attr>
-        <!--切换的渐变，毫秒，默认0，无效果-->
+        <!--切换的渐变，毫秒，默认0，不开启-->
         <attr name="ctv_fadeDuring" format="integer" />
-        <!--5.0+以上的涟漪效果，默认开启，与渐变、边框颜色等配置冲突时建议关闭-->
+        <!--5.0+以上的点击涟漪效果，默认开启，与渐变、边框颜色等配置冲突时建议关闭-->
         <attr name="ctv_ripple" format="boolean" />
+        <!--5.0+以上的点击Z轴效果，默认开启-->
+        <attr name="ctv_z" format="boolean" />
+        <!--点击动画时长-->
+        <attr name="ctv_z_during" format="integer" />
+        <!--最大Z轴elevation-->
+        <attr name="ctv_z_max_lift" format="dimension" />
     </declare-styleable>
 </resources>

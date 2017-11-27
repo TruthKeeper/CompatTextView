@@ -29,7 +29,8 @@
                 app:ctv_solidColor="@color/skyblue"
                 app:ctv_solidPressedColor="@color/blue"
                 app:ctv_textColor="@android:color/black"
-                app:ctv_textPressedColor="@color/orange" />
+                app:ctv_textPressedColor="@color/orange"
+                app:ctv_z="true" />
 
             <com.tk.compattextview.CompatTextView
                 android:layout_width="wrap_content"
@@ -57,7 +58,7 @@
                 android:text="带边框的按钮"
                 android:textColor="@android:color/white"
                 app:ctv_solidColor="@color/colorAccent"
-                app:ctv_solidPressedColor="@color/green"
+                app:ctv_solidPressedColor="@android:color/darker_gray"
                 app:ctv_strokeColor="@color/skyblue"
                 app:ctv_strokeWidth="4dp" />
 
@@ -80,7 +81,6 @@
             android:layout_marginTop="12dp"
             android:orientation="horizontal">
 
-
             <com.tk.compattextview.CompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -89,8 +89,10 @@
                 android:padding="20dp"
                 android:text="渐变的按钮"
                 app:ctv_fadeDuring="150"
+                app:ctv_gradientCenterColor="@android:color/holo_green_light"
+                app:ctv_gradientCenterPressedColor="@android:color/holo_orange_light"
                 app:ctv_gradientDirection="topLeftToBottomRight"
-                app:ctv_gradientDirectionPressed="topLeftToBottomRight"
+                app:ctv_gradientDirectionPressed="bottomLeftToTopRight"
                 app:ctv_gradientEndColor="@color/blue"
                 app:ctv_gradientEndPressedColor="@color/red"
                 app:ctv_gradientStartColor="@android:color/white"
@@ -107,12 +109,12 @@
                 android:text="其他渐变按钮"
                 android:textColor="@android:color/white"
                 app:ctv_fadeDuring="150"
+                app:ctv_gradientCenterColor="@color/green"
+                app:ctv_gradientCenterPressedColor="@color/green"
                 app:ctv_gradientDirection="leftToRight"
                 app:ctv_gradientDirectionPressed="bottomLeftToTopRight"
                 app:ctv_gradientEndColor="@color/blue"
                 app:ctv_gradientEndPressedColor="@android:color/black"
-                app:ctv_gradientStartColor="@color/green"
-                app:ctv_gradientStartPressedColor="@color/green"
                 app:ctv_ripple="false"
                 app:ctv_strokeColor="@android:color/black"
                 app:ctv_strokePressedColor="@color/colorAccent"
@@ -161,12 +163,12 @@
                 android:padding="12dp"
                 android:text="圆环"
                 android:textColor="@android:color/white"
-                app:ctv_bottomRightRadius="32dp"
-
+                app:ctv_radius="32dp"
                 app:ctv_ripple="false"
                 app:ctv_solidColor="@color/green"
                 app:ctv_solidPressedColor="@color/blue"
                 app:ctv_strokeColor="@color/red"
+                app:ctv_strokePressedColor="@android:color/holo_orange_light"
                 app:ctv_strokeWidth="4dp" />
         </LinearLayout>
 
@@ -184,7 +186,7 @@
                 android:background="#aaaaaa"
                 android:gravity="center_vertical"
                 android:text="左侧普通图标"
-                android:textColor="@android:color/white"
+                app:ctv_textColor="@android:color/white"
                 app:ctv_tintDrawableLeft="@mipmap/ic_launcher" />
 
             <com.tk.compattextview.CompatTextView
@@ -280,6 +282,7 @@
             app:ctv_tintDrawableLeft="@drawable/vector_github"
             app:ctv_tintDrawableLeftHeight="28dp"
             app:ctv_tintDrawableLeftWidth="28dp"
-            app:ctv_tintLeft="@color/colorAccent" />
+            app:ctv_tintLeft="@color/colorAccent"
+            app:ctv_z="true" />
     </LinearLayout>
 </ScrollView>

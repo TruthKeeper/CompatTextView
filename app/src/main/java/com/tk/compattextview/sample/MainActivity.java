@@ -4,12 +4,12 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.view.View;
 
 import com.tk.compattextview.CompatTextView;
+import com.tk.compattextview.TintUtils;
 
 public class MainActivity extends AppCompatActivity {
     {
@@ -30,10 +30,8 @@ public class MainActivity extends AppCompatActivity {
         });
         final CompatTextView textView = (CompatTextView) findViewById(R.id.btn_drawable_config);
 
-        drawable = ContextCompat.getDrawable(this, R.drawable.vector_github);
-        drawable = DrawableCompat.wrap(drawable.mutate());
+        drawable = TintUtils.tint(ContextCompat.getDrawable(this, R.drawable.vector_github), Color.WHITE);
         drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-        DrawableCompat.setTint(drawable, Color.WHITE);
 
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
