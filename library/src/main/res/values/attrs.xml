@@ -111,7 +111,7 @@
         <attr name="ctv_fadeDuring" format="integer" />
         <!--5.0+以上的点击涟漪效果，默认开启，与渐变、边框颜色等配置冲突时建议关闭-->
         <attr name="ctv_ripple" format="boolean" />
-        <!--5.0+以上的点击Z轴效果，默认开启-->
+        <!--5.0+以上的点击Z轴升降效果，默认开启-->
         <attr name="ctv_z" format="boolean" />
         <!--点击动画时长-->
         <attr name="ctv_z_during" format="integer" />

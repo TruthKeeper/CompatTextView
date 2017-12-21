@@ -13,7 +13,6 @@ import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
@@ -23,12 +22,14 @@ import java.util.Arrays;
  * <pre>
  *     author : TK
  *     time   : 2017/06/07
- *     desc   : 支持shape的solid、stroke、gradient、radius的配置；
- *              支持enabled、pressed、selected、unenabled共计4种状态的配置；
- *              不再需要写大量的shape、selector文件配置；
- *              支持上下左右的drawable大小配置，SVG支持、Tint着色支持；
- *              支持上下左右的drawable的对齐方式配置；
- *              5.0+配置pressed时点击涟漪效果；
+ *     desc   : <ol>不再需要写大量的shape、selector文件配置
+ *         <li>支持shape的solid、stroke、gradient、corner的配置</li>
+ *         <li>支持default、pressed、selected、disabled共计4种状态的配置</li>
+ *         <li>支持上下左右的drawable大小配置，SVG支持、Tint着色支持</li>
+ *         <li>支持上下左右的drawable的对齐方式配置</li>
+ *         <li>5.0+配置pressed时点击涟漪效果</li>
+ *         <li>5.0+配置pressed时点击lift升降效果</li>
+ *     </ol>
  * </pre>
  */
 public class CompatTextView extends AppCompatTextView {
@@ -45,7 +46,7 @@ public class CompatTextView extends AppCompatTextView {
     private float[] mCornerRadius;
     private int mStrokeWidth;
     /**
-     * enabled , pressed , selected , disabled
+     * default , pressed , selected , disabled
      */
     private int[] mSolidColor;
     private int[] mStrokeColor;
@@ -59,14 +60,14 @@ public class CompatTextView extends AppCompatTextView {
      */
     private int[] mDrawableAlign;
     /**
-     * enabled , pressed , selected , disabled
+     * default , pressed , selected , disabled
      */
     private int[] mGradientStartColor;
     private int[] mGradientCenterColor;
     private int[] mGradientEndColor;
     /**
      * gradient directions
-     * enabled , pressed , selected , disabled
+     * default , pressed , selected , disabled
      */
     private int[] mGradientDirection;
     /**
@@ -151,7 +152,7 @@ public class CompatTextView extends AppCompatTextView {
             ObjectAnimator drop = ObjectAnimator.ofFloat(this, "translationZ", 0)
                     .setDuration(mZDuring);
 
-            animator.addState(new int[]{STATES[1][0], -STATES[2][0]}, lift);
+            animator.addState(STATES[1], lift);
             animator.addState(STATES[3], drop);
             setStateListAnimator(animator);
         }
@@ -289,16 +290,12 @@ public class CompatTextView extends AppCompatTextView {
     }
 
     @Override
-    public void setCompoundDrawables(@Nullable final Drawable left, @Nullable final Drawable top,
-                                     @Nullable final Drawable right, @Nullable final Drawable bottom) {
-        super.setCompoundDrawables(left, top, right, bottom);
-        post(new Runnable() {
-            @Override
-            public void run() {
-                //由于对齐方式需要测量结果
-                offsetDrawable(left, top, right, bottom);
-            }
-        });
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        offsetDrawable(getCompoundDrawables()[0],
+                getCompoundDrawables()[1],
+                getCompoundDrawables()[2],
+                getCompoundDrawables()[3]);
     }
 
     /**
@@ -312,6 +309,7 @@ public class CompatTextView extends AppCompatTextView {
     private void offsetDrawable(final Drawable left, final Drawable top,
                                 final Drawable right, final Drawable bottom) {
         //drawable size must be smaller than total space
+        final int width = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
         if (null != left && left.getBounds().height() < getLineCount() * getLineHeight()) {
             int drawableTop = 0;
             switch (mDrawableAlign[0]) {
@@ -323,26 +321,28 @@ public class CompatTextView extends AppCompatTextView {
                     break;
                 default:
                     break;
-
             }
-            left.getBounds().bottom = left.getBounds().height() + drawableTop;
-            left.getBounds().top = drawableTop;
+            left.setBounds(left.getBounds().left,
+                    drawableTop,
+                    left.getBounds().right,
+                    left.getBounds().height() + drawableTop);
         }
-        if (null != top && top.getBounds().width() < getMeasuredWidth()) {
+        if (null != top && top.getBounds().width() < width) {
             int drawableLeft = 0;
             switch (mDrawableAlign[1]) {
                 case 0:
-                    drawableLeft = top.getBounds().width() - getMeasuredWidth() >> 1;
+                    drawableLeft = top.getBounds().width() - width >> 1;
                     break;
                 case 2:
-                    drawableLeft = -(top.getBounds().width() - getMeasuredWidth()) >> 1;
+                    drawableLeft = -(top.getBounds().width() - width) >> 1;
                     break;
                 default:
                     break;
-
             }
-            top.getBounds().right = top.getBounds().width() + drawableLeft;
-            top.getBounds().left = drawableLeft;
+            top.setBounds(drawableLeft,
+                    top.getBounds().top,
+                    top.getBounds().width() + drawableLeft,
+                    top.getBounds().bottom);
         }
         if (null != right && right.getBounds().height() < getLineCount() * getLineHeight()) {
             int drawableTop = 0;
@@ -355,28 +355,31 @@ public class CompatTextView extends AppCompatTextView {
                     break;
                 default:
                     break;
-
             }
-            right.getBounds().bottom = right.getBounds().height() + drawableTop;
-            right.getBounds().top = drawableTop;
+            right.setBounds(right.getBounds().left,
+                    drawableTop,
+                    right.getBounds().right,
+                    right.getBounds().height() + drawableTop);
         }
-        if (null != bottom && bottom.getBounds().width() < getMeasuredWidth()) {
+        if (null != bottom && bottom.getBounds().width() < width) {
             int drawableLeft = 0;
             switch (mDrawableAlign[3]) {
                 case 0:
-                    drawableLeft = bottom.getBounds().width() - getMeasuredWidth() >> 1;
+                    drawableLeft = bottom.getBounds().width() - width >> 1;
                     break;
                 case 2:
-                    drawableLeft = -(bottom.getBounds().width() - getMeasuredWidth()) >> 1;
+                    drawableLeft = -(bottom.getBounds().width() - width) >> 1;
                     break;
                 default:
                     break;
-
             }
-            bottom.getBounds().right = bottom.getBounds().width() + drawableLeft;
-            bottom.getBounds().left = drawableLeft;
+            bottom.setBounds(drawableLeft,
+                    bottom.getBounds().top,
+                    bottom.getBounds().width() + drawableLeft,
+                    bottom.getBounds().bottom);
         }
     }
+
 
     /**
      * init gradient
@@ -413,7 +416,7 @@ public class CompatTextView extends AppCompatTextView {
 
         mZ = array.getBoolean(R.styleable.CompatTextView_ctv_z, false);
         mZDuring = array.getInt(R.styleable.CompatTextView_ctv_z_during, DEFAULT_Z_DURING);
-        mZMaxLift = array.getInt(R.styleable.CompatTextView_ctv_z_max_lift, DEFAULT_Z_MAX_LIFT);
+        mZMaxLift = array.getDimensionPixelOffset(R.styleable.CompatTextView_ctv_z_max_lift, DEFAULT_Z_MAX_LIFT);
     }
 
     /**
@@ -427,17 +430,18 @@ public class CompatTextView extends AppCompatTextView {
             return null;
         }
         GradientDrawable enable = generatePartDrawable(0);
+        GradientDrawable pressed = generatePartDrawable(1);
 
         if (isEnabled()) {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP
                     && mRipple
                     && (!isSelected())
-                    && (NULL != mSolidColor[1])
+                    && (null != pressed)
                     && (null != enable)) {
-                return new RippleDrawable(ColorStateList.valueOf(mSolidColor[1]), enable, null);
+                return new RippleDrawable(ColorStateList.valueOf(mSolidColor[1]), enable, pressed);
             }
         }
-        GradientDrawable pressed = generatePartDrawable(1);
+
         GradientDrawable selected = generatePartDrawable(2);
         GradientDrawable disabled = generatePartDrawable(3);
         StateListDrawable stateListDrawable = new StateListDrawable();
